@@ -1,20 +1,22 @@
 ---
 
+- name: Check if kubectl binary exists.
+  stat:
+    path: "{{ kubectl_bin_path }}"
+  register: kubectl_check
+
+- name: Check kubectl version.
+  command: "{{ kubectl_bin_path }} version --client"
+  failed_when: false
+  changed_when: false
+  register: kubectl_existing_version
+
 - name: Download kubectl binary
   get_url:
-    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kubectl_version }}/bin/{{ kubectl_os }}/{{ kubectl_arch }}/kubectl"
+    url: "https://dl.k8s.io/release/v{{ kubectl_version }}/bin/{{ k8s_platform }}/{{ k8s_arch }}/kubectl"
     checksum: "{{ kubectl_checksum_binary }}"
-    dest: "{{ kubectl_tmp_directory }}"
-  tags:
-    - kubectl
-
-- name: Copy kubectl binary to destination directory
-  copy:
-    src: "{{ kubectl_tmp_directory }}/{{ item }}"
-    dest: "{{ kubectl_bin_directory }}/{{ item }}"
-    mode: "{{ kubectl_binary_mode }}"
-    owner: "{{ kubectl_owner }}"
-    group: "{{ kubectl_group }}"
-    remote_src: true
-  with_items:
-    - kubectl
+    dest: /tmp
+  when: >
+    not kubectl_check.stat.exists
+    or kubectl_version not in kubectl_existing_version.stdout
+  notify: copy kubectl binary

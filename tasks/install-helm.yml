@@ -13,19 +13,11 @@
 
 - name: Download helm.
   unarchive:
-    src: https://get.helm.sh/helm-{{ helm_version }}-{{ helm_platform }}-{{ helm_arch }}.tar.gz
+    src: https://get.helm.sh/helm-{{ helm_version }}-{{ k8s_platform }}-{{ k8s_arch }}.tar.gz
     dest: /tmp
     remote_src: true
     mode: 0755
-  register: helm_download
+  notify: copy helm binary
   when: >
     not helm_check.stat.exists
     or helm_version not in helm_existing_version.stdout
-- name: Copy helm binary into place.
-  copy:
-    src: "/tmp/{{ helm_platform }}-{{ helm_arch }}/helm"
-    dest: "{{ helm_bin_path }}"
-    mode: 0755
-    remote_src: true
-  become: true
-  when: helm_download is changed
