@@ -56,6 +56,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: install ca-certificates
+        run: |
+          sudo apt -y install ca-certificates
+
       - name: Install test dependencies.
         run: pip3 install ansible molecule[docker] docker
 
