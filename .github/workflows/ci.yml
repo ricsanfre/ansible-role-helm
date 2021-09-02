@@ -42,8 +42,6 @@ jobs:
         distro:
           - os: ubuntu
             release: 20.04
-          - os: ubuntu
-            release: 18.04
 
     steps:
       - name: Check out the codebase.
@@ -55,10 +53,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-
-      - name: install ca-certificates
-        run: |
-          sudo apt -y install ca-certificates
 
       - name: Install test dependencies.
         run: pip3 install ansible molecule[docker] docker
