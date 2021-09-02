@@ -1,5 +1,7 @@
 # Ansible Role: Helm
 
+[![CI](https://github.com/ricsanfre/ansible-role-k8s_cli/actions/workflows/ci.yml/badge.svg)](https://github.com/ricsanfre/ansible-role-k8s_cli/actions/workflows/ci.yml)
+
 This role installs k8s cli utilities [Helm](https://helm.sh) and Kubectl 
 
 
